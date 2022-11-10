@@ -57,6 +57,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.'Production'}} # env.の後にアプリ名の環境変数名を記入してください
+          app-name: ${{ env.Production}} # env.の後にアプリ名の環境変数名を記入してください
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # secrets.の後に定義したSecretの名前を記入してください
           package: ${{ env.${{ steps.deploy-to-webapp.outputs.webapp-url }} }} # env.の後にアプリのパッケージパスの環境変数名を記入してください
