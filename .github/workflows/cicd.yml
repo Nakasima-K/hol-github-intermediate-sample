@@ -1,5 +1,8 @@
 name: .NET
 
+env:  
+  AZURE_WEBAPP_NAME: app-hol-github-demonzjo 
+   AZURE_WEBAPP_PACKAGE_PATH: '.'   
 on: 
   push:
     branches: ["main"]
@@ -32,4 +35,28 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      # 実行前にテスト プロジェクトをビルドしません コマンドの詳細レベルを設定
        
+deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    # この行にneedsを挿入してください
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: dotnet-webapp
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.'Production'}} # env.の後にアプリ名の環境変数名を記入してください
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # secrets.の後に定義したSecretの名前を記入してください
+          package: ${{ env.${{ steps.deploy-to-webapp.outputs.webapp-url }} }} # env.の後にアプリのパッケージパスの環境変数名を記入してください
