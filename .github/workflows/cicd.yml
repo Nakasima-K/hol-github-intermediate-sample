@@ -37,7 +37,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
       # 実行前にテスト プロジェクトをビルドしません コマンドの詳細レベルを設定
        
-deploy:
+  deploy:
     permissions:
       contents: none
     runs-on: ubuntu-latest
